@@ -132,4 +132,13 @@ class Library
         b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
         return get_item_by_guid(b[a.size-1][0], readers)
     end
+    def count_3_most_popular_book_readers
+        a = orders.group_by{ |o| o.book}
+        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
+        l_books = []
+        l_books << b[a.size-1][0] << b[a.size-2][0] << b[a.size-3][0]
+        l_orders = []
+        l_orders = orders.select{|a| l_books.index(a.book) != nil}
+        return l_orders.group_by{ |o| o.reader}.size
+    end
 end
