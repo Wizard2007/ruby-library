@@ -9,6 +9,6 @@ class Order < Base_object
         @book, @reader, @date = book, reader, date
     end
     def to_s
-        puts @book + ' ' + @reader + ' ' + @date.to_s + ' '+ guid
+        puts '@book =' + @book + ' @reader =' + @reader + ' ' + @date.to_s + ' guid ='+ guid
     end
 end

@@ -117,5 +117,15 @@ class Library
         saveAuthors(a_path_to_authors)
         saveReaders(a_path_to_readers)
     end
+    def get_item_by_guid(a_guid, a_collection)
+        result = nil
+        a1 = a_collection.select{|a| a.guid == a_guid}
+        result = a1[0] if a1.size > 0
+    end
+    def get_most_popular_book
+        a = orders.group_by{ |o| o.book}
+        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
+        return get_item_by_guid(b[a.size-1][0], books)
+    end
 
 end

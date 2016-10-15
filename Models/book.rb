@@ -6,4 +6,7 @@ class Book < Base_object
         super()
         @title, @author = title, author
     end
+    def to_s
+        @guid.to_s + ' ' + @title
+    end
 end
