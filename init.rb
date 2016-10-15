@@ -2,8 +2,14 @@ require './Models/library.rb'
 require 'date'
 
 library = Library.new
+library.generateTmpReaders(10)
+library.generateTmpAuthors(9)
+library.generateTmpBooks(20)
+library.generateTmpOrders(60)
+library.saveAllData
+
 puts 'read file'
-library.ReadFromFile('./ordes.txt') {library.AddOrder()}
+library.readFromFile('./ordes.txt') {library.addOrder()}
 puts 'read end'
 puts library.orders.size
 puts '------------------------------'

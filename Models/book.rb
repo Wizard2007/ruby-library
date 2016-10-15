@@ -1,9 +1,9 @@
 require './Models/base_object.rb'
 
-class Author < Base_object    
-    attr_accessor :name, :biography
-    def initialize(name, biography)
+class Book < Base_object
+    attr_accessor :title, :author
+    def initialize(title, author)
         super()
-        @name, @biography = name, biography
+        @title, @author = title, author
     end
 end

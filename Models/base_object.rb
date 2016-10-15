@@ -24,5 +24,10 @@ class Base_object
             #puts values[i]            
         end        
     end
+    def generate(a_index)
+        instance_variables.map do |attribute|
+            instance_variable_set(attribute,attribute.to_s + '_'+a_index.to_s) if attribute.to_s != '@guid'
+        end
+    end
 
 end
