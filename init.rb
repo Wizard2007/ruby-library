@@ -64,3 +64,5 @@ library.loadAllData
 #library.SaveToFile('./ordes.txt', library.orders)
 puts 'most popular book is '
 puts library.get_most_popular_book.to_s
+puts 'most often take book reader is'
+puts library.get_often_take_book_reader

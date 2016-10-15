@@ -6,4 +6,7 @@ class Reader < Base_object
         super()
         @name, @email, @city, @street, @house = name, email, city, street, house
     end
+    def to_s
+        @guid.to_s + ' ' + @name
+    end
 end

@@ -127,5 +127,9 @@ class Library
         b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
         return get_item_by_guid(b[a.size-1][0], books)
     end
-
+    def get_often_take_book_reader
+        a = orders.group_by{ |o| o.reader}
+        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
+        return get_item_by_guid(b[a.size-1][0], readers)
+    end
 end
