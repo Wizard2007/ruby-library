@@ -2,7 +2,7 @@ require './Models/library.rb'
 require 'date'
 
 library = Library.new
-library.loadAllData
+library._load_all_data
 # first test get most popular book
 #a = library.orders.group_by{ |o| o.book}
 #puts a.size
@@ -37,15 +37,15 @@ library.loadAllData
 #puts a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}[a.size-1][0]
 
 # Tmp data generator
-#library.generateTmpReaders(10)
-#library.generateTmpAuthors(9)
-#library.generateTmpBooks(20)
-#library.generateTmpOrders(60)
-#library.saveAllData
+#library._generate_tmp_readers(10)
+#library._generate_tmp_authors(9)
+#library._generate_tmp_books(20)
+#library._generate_tmp_orders(60)
+#library._save_all_data
 
 # read data test
 #puts 'read file'
-#library.readFromFile('./ordes.txt') {library.addOrder()}
+#library._read_from_file('./ordes.txt') {library.addOrder()}
 #puts 'read end'
 #puts library.orders.size
 #puts '------------------------------'
@@ -68,5 +68,5 @@ puts '------------------------------------------------'
 puts 'most often take book reader is'
 puts library.get_often_take_book_reader
 puts '------------------------------------------------'
-puts 'count 3 most popular book readers ' + library.count_3_most_popular_book_readers.to_s
+puts 'count 3 most popular book readers ' + library.count_3_mpb_readers.to_s
 puts '------------------------------------------------'

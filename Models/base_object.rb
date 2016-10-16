@@ -10,9 +10,9 @@ class Base_object
         instance_variables.map do |attribute|  
             result += instance_variable_get(attribute).to_s + delimeter 
         end
-        return result
+        result
     end
-    def get_instance_variables_from_str(a_source_str, a_delimeter = ';')
+    def get_instance_vars_from_str(a_source_str, a_delimeter = ';')
         #puts a_source_str
         values = a_source_str.split(a_delimeter)
         i = 0
