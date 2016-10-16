@@ -18,10 +18,7 @@ class Base_object
         i = 0
         instance_variables.map do |attribute|  
             instance_variable_set(attribute,values[i]) 
-            i = i + 1;
-            #puts attribute.to_s
-            #puts i
-            #puts values[i]            
+            i = i + 1
         end        
     end
     def generate(a_index)

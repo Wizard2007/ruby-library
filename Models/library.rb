@@ -6,7 +6,7 @@ require './Models/reader.rb'
 class Library
     attr_accessor :books, :authors, :orders, :readers    
     attr_accessor :path_to_books , :path_to_authors, :path_to_readers, :path_to_orders
-    def initialize()
+    def initialize
         @books, @authors, @orders, @readers = [], [], [], []
         @path_to_orders = './ordes.txt'
         @path_to_books = './books.txt'
@@ -38,33 +38,42 @@ class Library
         return order
     end
     def saveToFile(a_path_to_file, a_collection)
-        f = File.new(a_path_to_file, "w+")
+        f = File.new(a_path_to_file, 'w+')
         a_collection.each{|a| f.puts a.get_as_delimetered_str}        
     end    
     def generateTmpData(a_n)
-        for i in 1..a_n
+        i = 1
+        loop do
             a = yield
             a.generate(i)
+            break if i == a_n
+            i+1
         end
     end
     def generateTmpReaders(a_n)
-        generateTmpData(a_n) {addReader()}
+        generateTmpData(a_n) { addReader
+        }
     end
     def generateTmpBooks(a_n)
-        generateTmpData(a_n) {addBook()}
-        rndAuthoe = Random.new
-        books.each {|b| b.author = authors[rndAuthoe.rand(authors.size)].guid}
+        generateTmpData(a_n) { addBook
+        }
+        _rndAuthoe = Random.new
+        books.each {|b| b.author = authors[_rndAuthoe.rand(authors.size)].guid}
     end
     def generateTmpAuthors(a_n)
-        generateTmpData(a_n) {addAuthor()}
+        generateTmpData(a_n) { addAuthor
+        }
     end
     def generateTmpOrders(a_n)
         rndReader = Random.new
         rndBook = Random.new
-        for i in 1..a_n
-            a = addOrder(books[rndBook.rand(books.size)].guid,
+        i = 1
+        loop do
+            addOrder(books[rndBook.rand(books.size)].guid,
                 readers[rndReader.rand(readers.size)].guid,
                 Date.parse(Time.now.to_s))
+            break if i == a_n
+            i+=1
         end
     end
     def readFromFile(a_path_to_file)
@@ -91,19 +100,23 @@ class Library
     end
     def loadOrders(a_path)
         a_path = path_to_orders if a_path == ''
-        readFromFile(a_path) {addOrder()}
+        readFromFile(a_path) { addOrder
+        }
     end
     def loadBooks(a_path)
         a_path = path_to_books if a_path == ''
-        readFromFile(a_path) {addBook()}
+        readFromFile(a_path) { addBook
+        }
     end
     def loadAuthors(a_path)
         a_path = path_to_authors if a_path == ''
-        readFromFile(a_path) {addAuthor()}
+        readFromFile(a_path) { addAuthor
+        }
     end
     def loadReaders(a_path)
         a_path = path_to_readers if a_path == ''
-        readFromFile(a_path) {addReader()}
+        readFromFile(a_path) { addReader
+        }
     end
     def loadAllData(a_path_to_books = '', a_path_to_authors = '', a_path_to_readers = '', a_path_to_orders = '')
         loadOrders(a_path_to_orders)
@@ -121,6 +134,7 @@ class Library
         result = nil
         a1 = a_collection.select{|a| a.guid == a_guid}
         result = a1[0] if a1.size > 0
+        return result
     end
     def get_most_popular_book
         a = orders.group_by{ |o| o.book}
@@ -137,8 +151,7 @@ class Library
         b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
         l_books = []
         l_books << b[a.size-1][0] << b[a.size-2][0] << b[a.size-3][0]
-        l_orders = []
-        l_orders = orders.select{|a| l_books.index(a.book) != nil}
+        l_orders = orders.select{|o| l_books.index(o.book) != nil}
         return l_orders.group_by{ |o| o.reader}.size
     end
 end
