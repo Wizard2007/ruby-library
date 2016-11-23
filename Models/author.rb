@@ -1,4 +1,4 @@
-require './Models/base_object.rb'
+require './Models/base_object.rb' 
 
 class Author < BaseObject
     attr_accessor :name, :biography
