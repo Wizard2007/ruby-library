@@ -1,7 +1,7 @@
 require './Models/base_object.rb'
 require 'date'
 
-class Order < Base_object
+class Order < BaseObject
     attr_accessor :book, :reader, :date
     def initialize(book, reader, date)
         super()

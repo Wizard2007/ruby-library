@@ -1,6 +1,6 @@
 require './Models/base_object.rb'
 
-class Book < Base_object
+class Book < BaseObject
     attr_accessor :title, :author
     def initialize(title, author)
         super()

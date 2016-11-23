@@ -1,6 +1,6 @@
 require './Models/base_object.rb'
 
-class Reader < Base_object
+class Reader < BaseObject
     attr_accessor :name, :email, :city, :street, :house
     def initialize(name, email, city, street, house)
         super()
