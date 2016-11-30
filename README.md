@@ -1,4 +1,4 @@
-# ruby-library ruby  garage 
+# ruby-library
 Tasks
 Library
 
