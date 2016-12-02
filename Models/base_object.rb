@@ -1,5 +1,5 @@
 require 'securerandom'
-
+ 
 class BaseObject
   attr_accessor :guid
 
