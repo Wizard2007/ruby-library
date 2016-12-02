@@ -8,11 +8,7 @@ class BaseObject
   end
 
   def get_as_delimiter_str(delimiter = ';')
-    result = ''
-    instance_variables.map do |attribute|
-    result += instance_variable_get(attribute).to_s + delimiter
-    end
-    result
+    instance_variables.map {|attr| instance_variable_get(attr).to_s}.join(delimiter)
   end
 
   def get_instance_vars_from_str(source_str, delimiter = ';')
