@@ -1,7 +1,7 @@
 require './Models/library.rb'
 
 library = Library.new
-library._load_all_data
+library.load_all_data
 
 puts 'most popular book is '
 puts library.get_most_popular_book.to_s

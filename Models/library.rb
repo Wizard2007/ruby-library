@@ -5,153 +5,60 @@ require './Models/reader.rb'
 
 class Library
     attr_accessor :books, :authors, :orders, :readers    
-    attr_accessor :path_to_books , :path_to_authors, :path_to_readers, :path_to_orders
     def initialize
         @books, @authors, @orders, @readers = [], [], [], []
-        @path_to_orders = './ordes.txt'
-        @path_to_books = './books.txt'
-        @path_to_authors = './authors.txt'
-        @path_to_readers = './readers.txt'
     end
-    def _add_book(a_name = '', a_biography = '', a_guid = nil)
-        book = Book.new(a_name, a_biography)
-        book.guid = a_guid if a_guid
-        books << book
-        book
+    def get_class_name(source)
+        source_str = String.new(source)
+        source_str.sub!('@','').chr.capitalize + source_str.slice(1,source_str.length - 1).chop!
     end
-        def _add_author(name = '', biography = '', a_guid = nil)
-        author = Author.new(name, biography)
-        author.guid = a_guid if a_guid
-        authors << author
-        author
+    def add_object(collection_name = '', options = {})
+        klass_name = get_class_name(collection_name)
+        obj = Kernel.const_get(klass_name).add(options)
+        instance_variable_get("#{collection_name}") << obj
+        obj
     end
-    def _add_reader(a_name = '', a_email = '', a_city = '', a_street = '', a_house = '', a_guid = nil)
-        reader = Reader.new(a_name, a_email, a_city, a_street, a_house)
-        reader.guid = a_guid if a_guid
-        readers << reader
-        reader
+    def save_to_file(path_to_file, collection)
+        file = File.new(path_to_file, 'w+')
+        collection.each{|obj| file.puts obj.get_as_delimiter_str}
     end
-    def _add_order(a_book_guid = '', a_reader_guid = '', a_date = nil, a_guid = nil)
-        order = Order.new(a_book_guid, a_reader_guid, a_date)                
-        order.guid = a_guid if a_guid              
-        orders << order
-        order
+    def get_file_name(collection_name)
+        "#{collection_name.sub('@', '')}.txt"
     end
-    def _save_to_file(a_path_to_file, a_collection)
-        f = File.new(a_path_to_file, 'w+')
-        a_collection.each{|a| f.puts a.get_as_delimetered_str}        
-    end    
-    def _generate_tmp_data(a_n)
-        i = 1
-        loop do
-            a = yield
-            a.generate(i)
-            break if i == a_n
-            i+1
+    def load_data(collection_name)
+        File.open(get_file_name(collection_name), 'r').each do |line|
+            obj = add_object(collection_name, {})
+            obj.get_instance_vars_from_str(line)
         end
     end
-    def _generate_tmp_readers(a_n)
-        _generate_tmp_data(a_n) { _add_reader
-        }
+    def load_all_data
+        instance_variables.map {|var| load_data(var.to_s) }
     end
-    def _generate_tmp_books(a_n)
-        _generate_tmp_data(a_n) { _add_book
-        }
-        _rnd_authoe = Random.new
-        books.each {|b| b.author = authors[_rnd_authoe.rand(authors.size)].guid}
+    def save_all_data
+        instance_variables.map {|var| save_to_file(get_file_name(var.to_s), var)}
     end
-    def _generate_tmp_authors(a_n)
-        _generate_tmp_data(a_n) { _add_author
-        }
-    end
-    def _generate_tmp_orders(a_n)
-        _rnd_reader = Random.new
-        _rnd_book = Random.new
-        i = 1
-        loop do
-            _add_order(books[_rnd_book.rand(books.size)].guid,
-                       readers[_rnd_reader.rand(readers.size)].guid,
-                       Date.parse(Time.now.to_s))
-            break if i == a_n
-            i+=1
-        end
-    end
-    def _read_from_file(a_path_to_file)
-        File.open(a_path_to_file, 'r').each do |line|          
-          a = yield 
-          a.get_instance_vars_from_str(line)
-        end
-    end
-    def _save_orders(a_path)
-        a_path = path_to_orders if a_path == ''
-        _save_to_file(a_path, orders)
-    end
-    def _save_books(a_path)
-        a_path = path_to_books if a_path == ''
-        _save_to_file(a_path, books)
-    end
-    def _save_authors(a_path)
-        a_path = path_to_authors if a_path == ''
-        _save_to_file(a_path, authors)
-    end
-    def _save_readers(a_path)
-        a_path = path_to_readers if a_path == ''
-        _save_to_file(a_path, readers)
-    end
-    def _load_orders(a_path)
-        a_path = path_to_orders if a_path == ''
-        _read_from_file(a_path) { _add_order
-        }
-    end
-    def _load_books(a_path)
-        a_path = path_to_books if a_path == ''
-        _read_from_file(a_path) { _add_book
-        }
-    end
-    def _load_authors(a_path)
-        a_path = path_to_authors if a_path == ''
-        _read_from_file(a_path) { _add_author
-        }
-    end
-    def _load_readers(a_path)
-        a_path = path_to_readers if a_path == ''
-        _read_from_file(a_path) { _add_reader
-        }
-    end
-    def _load_all_data(a_path_to_books = '', a_path_to_authors = '', a_path_to_readers = '', a_path_to_orders = '')
-        _load_orders(a_path_to_orders)
-        _load_books(a_path_to_books)
-        _load_authors(a_path_to_authors)
-        _load_readers(a_path_to_readers)
-    end
-    def _save_all_data(a_path_to_books = '', a_path_to_authors = '', a_path_to_readers = '', a_path_to_orders = '')
-        _save_orders(a_path_to_orders)
-        _save_books(a_path_to_books)
-        _save_authors(a_path_to_authors)
-        _save_readers(a_path_to_readers)
-    end
-    def get_item_by_guid(a_guid, a_collection)
-        result = nil
-        a1 = a_collection.select{|a| a.guid == a_guid}
-        result = a1[0] if a1.size > 0
-        result
+    def get_item_by_guid(guid, collection)
+        results = collection.select{|element| element.guid == guid}
+        results[0] if results.size > 0
     end
     def get_most_popular_book
-        a = orders.group_by{ |o| o.book}
-        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
-        get_item_by_guid(b[a.size-1][0], books)
+
+        l_orders = group_by_and_sort_orders
+        get_item_by_guid(l_orders[l_orders.size-1][0], books)
     end
     def get_often_take_book_reader
-        a = orders.group_by{ |o| o.reader}
-        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
-        get_item_by_guid(b[a.size-1][0], readers)
+        l_orders = orders.group_by{ |order| order.reader}.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
+        get_item_by_guid(l_orders[l_orders.size-1][0], readers)
     end
     def count_3_mpb_readers
-        a = orders.group_by{ |o| o.book}
-        b = a.sort{|x,y| x[1, 1][0].size <=>y[1, 1][0].size}
+        l_orders = group_by_and_sort_orders
         l_books = []
-        l_books << b[a.size-1][0] << b[a.size-2][0] << b[a.size-3][0]
-        l_orders = orders.select{|o| l_books.index(o.book) != nil}
-        l_orders.group_by{ |o| o.reader}.size
+        l_size = l_orders.size
+        l_books << l_orders[l_size-1][0] << l_orders[l_size-2][0] << l_orders[l_size-3][0]
+        l_orders = orders.select{|order| l_books.include?(order.book) }
+        l_orders.group_by{ |order| order.reader}.size
+    end
+    def group_by_and_sort_orders
+        orders.group_by { |order| order.book }.sort { |x, y| x[1, 1][0].size <=>y[1, 1][0].size }
     end
 end
